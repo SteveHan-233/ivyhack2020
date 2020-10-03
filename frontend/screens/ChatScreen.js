@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import io from "socket.io-client";
 
 export default function ChatList() {
   const [socket, setSocket] = useState(null);
-  const [chatMessage, setChatMessage] = useState('');
+  const [chatMessage, setChatMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   useEffect(() => {
-    setSocket(io('http://127.0.0.1:3000'));
+    setSocket(io("http://127.0.0.1:3000"));
   }, []);
   useEffect(() => {
     if (socket) {
-      socket.on('connect', () => {
-        console.log('connected!');
+      socket.on("connect", () => {
+        console.log("connected!");
       });
-      socket.on('chat message', (msg) => {
+      socket.on("chat message", (msg) => {
         setChatMessages(chatMessages.concat(msg));
       });
     }
@@ -28,8 +28,8 @@ export default function ChatList() {
   });
 
   const submitChatMessage = () => {
-    socket.emit('chat message', chatMessage);
-    setChatMessage('');
+    socket.emit("chat message", chatMessage);
+    setChatMessage("");
   };
 
   return (
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
   container: {
     height: 400,
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: "#F5FCFF",
   },
 });

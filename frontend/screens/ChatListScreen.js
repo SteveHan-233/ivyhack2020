@@ -10,7 +10,7 @@ import {
 import { ListItem, Avatar } from "react-native-elements";
 import ChatListItem from "../components/ChatListItem";
 
-export default function ChatList() {
+export default function ChatList({ navigation }) {
   const chats = [
     {
       name: "YEET",
@@ -145,13 +145,18 @@ export default function ChatList() {
       uid: 11,
     },
   ];
+  navigation.setOptions({ header: () => null });
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerText}>Chats</Text>
       <FlatList
         data={chats}
         renderItem={({ item, index }) => (
-          <ChatListItem chat={item} bottomDivider={index == chats.length - 1} />
+          <ChatListItem
+            chat={item}
+            bottomDivider={index == chats.length - 1}
+            navigation={navigation}
+          />
         )}
       />
     </SafeAreaView>
