@@ -1,22 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text, TextInput, StyleSheet } from "react-native";
-import io from "socket.io-client";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import io from 'socket.io-client';
 
-export default function ChatList()
-{
-  const [chatMessage, setChatMessage] = useState("");
+export default function ChatList() {
+  const [socket, setSocket] = useState(null);
+  const [chatMessage, setChatMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
-  let socket; 
   useEffect(() => {
-    socket = io("http://127.0.0.1:3000");
-    socket.on("chat message", (msg) => {
-      console.log(`msg: ${msg}`)
-      console.log([...chatMessages, msg])
-      setChatMessages([msg]);
-      console.log(chatMessages);
-    },[]);
-
+    setSocket(io('http://127.0.0.1:3000'));
   }, []);
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect', () => {
+        console.log('connected!');
+      });
+      socket.on('chat message', (msg) => {
+        setChatMessages(chatMessages.concat(msg));
+      });
+    }
+  }, [socket, chatMessages]);
   const messages = chatMessages.map((message, index) => {
     return (
       <Text key={index} style={{ borderWidth: 2, top: 500 }}>
@@ -24,11 +26,11 @@ export default function ChatList()
       </Text>
     );
   });
-  
+
   const submitChatMessage = () => {
     socket.emit('chat message', chatMessage);
-    setChatMessage("");
-  }
+    setChatMessage('');
+  };
 
   return (
     <View style={styles.container}>
@@ -50,6 +52,6 @@ const styles = StyleSheet.create({
   container: {
     height: 400,
     flex: 1,
-    backgroundColor: "#F5FCFF",
+    backgroundColor: '#F5FCFF',
   },
 });
