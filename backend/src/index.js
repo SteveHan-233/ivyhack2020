@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const { measureMemory } = require("vm");
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,11 +25,18 @@ mongoose.connection.on("error", (err) => {
   console.error(err);
 });
 
+const messages = [];
 io.on("connection", (socket) => {
   console.log("a user connected :D");
-  socket.on("chat message", (msg) => {
+  // use groupid as socket?
+  socket.on("message", (msg) => {
     console.log(msg);
-    io.emit("chat message", msg);
+    messages.push(msg);
+    console.log(messages);
+    io.emit("message", msg);
+  });
+  socket.on("disconnect", () => {
+    console.log("a user disconnected :(");
   });
 });
 
