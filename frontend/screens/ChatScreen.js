@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import io from "socket.io-client";
 
-export default function ChatList() {
+export default function ChatScreen({ navigation }) {
   const [socket, setSocket] = useState(null);
   const [chatMessage, setChatMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   useEffect(() => {
-    setSocket(io("http://127.0.0.1:3000"));
+    setSocket(io("http://127.0.0.1:4000"));
   }, []);
   useEffect(() => {
     if (socket) {
