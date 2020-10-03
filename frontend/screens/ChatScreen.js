@@ -79,6 +79,7 @@ export default function ChatScreen({ navigation }) {
         console.log("connected!");
       });
       socket.on("message", (msg) => {
+        // Messages need type (poll, messsage, advice from bot)
         setChatMessages([...chatMessages, msg]);
       });
     }
