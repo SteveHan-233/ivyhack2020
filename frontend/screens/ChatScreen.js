@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import io from "socket.io-client";
+import ChatBubble from "../components/ChatBubble";
 
 export default function ChatScreen({ navigation }) {
   const [socket, setSocket] = useState(null);
@@ -15,17 +18,10 @@ export default function ChatScreen({ navigation }) {
         console.log("connected!");
       });
       socket.on("chat message", (msg) => {
-        setChatMessages(chatMessages.concat(msg));
+        setChatMessages([...chatMessages, msg]);
       });
     }
   }, [socket, chatMessages]);
-  const messages = chatMessages.map((message, index) => {
-    return (
-      <Text key={index} style={{ borderWidth: 2, top: 500 }}>
-        {message}
-      </Text>
-    );
-  });
 
   const submitChatMessage = () => {
     socket.emit("chat message", chatMessage);
@@ -34,24 +30,48 @@ export default function ChatScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {messages}
-      <TextInput
-        style={{ height: 40, borderWidth: 2, top: 600 }}
-        autoCorrect={false}
-        value={chatMessage}
-        onSubmitEditing={() => submitChatMessage()}
-        onChangeText={(chatMessage) => {
-          setChatMessage(chatMessage);
-        }}
+      <FlatList
+        data={chatMessages}
+        style={styles.messagesContainer}
+        renderItem={({ item, index }) => (
+          <ChatBubble key={index} message={item} left={false} />
+        )}
       />
+      <View style={styles.actionPanel}>
+        <TouchableOpacity style={styles.button}>
+          <FontAwesome5 name="poll-h" size={28} />
+        </TouchableOpacity>
+        <TextInput
+          style={{ height: 32, width: 320, borderWidth: 1, borderRadius: 5 }}
+          autoCorrect={false}
+          value={chatMessage}
+          onSubmitEditing={() => submitChatMessage()}
+          onChangeText={(chatMessage) => {
+            setChatMessage(chatMessage);
+          }}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => submitChatMessage()}
+        >
+          <Ionicons name="md-send" size={28} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 400,
     flex: 1,
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#FFF",
+  },
+  messagesContainer: {},
+  actionPanel: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  button: {
+    marginHorizontal: 10,
   },
 });
