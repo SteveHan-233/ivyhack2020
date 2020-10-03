@@ -15,6 +15,7 @@ import Modal from "react-native-modal";
 import { Container, Header, Content, Tab, Tabs } from "native-base";
 import MultiSelect from "react-native-multiple-select";
 import RadioForm from "react-native-simple-radio-button";
+import Poll from "../components/Poll";
 
 const items = [
   {
@@ -60,7 +61,7 @@ var radio_props = [
   { label: "Sell", value: 1 },
 ];
 
-export default function ChatScreen({ navigation }) {
+export default function ChatScreen({ navigation, route }) {
   const [socket, setSocket] = useState(null);
   const [chatMessage, setChatMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
@@ -92,8 +93,21 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
+  navigation.setOptions({ title: route.params.groupName });
+
   return (
     <View style={styles.container}>
+      <Poll
+        data={{
+          question: "Should we sell Tesla stocks?",
+          votes: {
+            yes: 14,
+            dick: 69,
+            no: 1,
+          },
+          totalVotes: 84,
+        }}
+      />
       <FlatList
         data={chatMessages}
         style={styles.messagesContainer}
