@@ -130,6 +130,7 @@ export default function ChatScreen({ navigation, route }) {
           </Text>
         )}
       </View>
+      <Text style={styles.pollsHeader}>Chat</Text>
       <FlatList
         data={chatMessages}
         style={styles.messagesContainer}
@@ -302,10 +303,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pollsHeader: {
-    marginTop: 15,
+    marginTop: 10,
     fontWeight: "bold",
     fontSize: 28,
-    marginBottom: 5,
+    // marginBottom: 5,
     marginHorizontal: 10,
   },
   pollsAltText: {
