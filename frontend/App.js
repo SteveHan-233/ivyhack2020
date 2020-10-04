@@ -1,21 +1,18 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ChatScreen from './screens/ChatScreen';
-import ChatList from './screens/ChatListScreen';
-import Login from './screens/Login';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import AuthReducer from './reducers/AuthReducer';
+import RootNav from './navigation/RootNav';
 
-const Tab = createBottomTabNavigator();
+const store = createStore(AuthReducer, applyMiddleware(thunk));
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="login" component={Login} />
-        <Tab.Screen name="ChatScreen" component={ChatScreen} />
-        <Tab.Screen name="ChatList" component={ChatList} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <RootNav />
+    </Provider>
   );
 }

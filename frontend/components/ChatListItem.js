@@ -2,11 +2,11 @@ import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 
-export default function ChatListItem({ chat, bottomDivider }) {
+export default function ChatListItem({ navigation, chat, bottomDivider }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        alert("yeet");
+        navigation.navigate("ChatScreen", { chatId: chat.uid });
       }}
     >
       <ListItem key={chat.uid} topDivider bottomDivider={bottomDivider}>

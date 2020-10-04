@@ -18,7 +18,7 @@ userSchema.pre('save', async function (next) {
   if (!user.isModified('password')) {
     return next();
   }
-  user.password = bcrypt.hash(user.password, 10);
+  user.password = await bcrypt.hash(user.password, 10);
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
@@ -29,4 +29,4 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   }
 };
 
-mongoose.model('USER', userSchema);
+mongoose.model('User', userSchema);
