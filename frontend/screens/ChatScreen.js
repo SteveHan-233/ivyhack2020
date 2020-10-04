@@ -17,45 +17,9 @@ import MultiSelect from "react-native-multiple-select";
 import RadioForm from "react-native-simple-radio-button";
 import Poll from "../components/Poll";
 import { ngrok } from "../config";
-
-const items = [
-  {
-    id: "92iijs7yta",
-    name: "Ondo",
-  },
-  {
-    id: "a0s0a8ssbsd",
-    name: "Ogun",
-  },
-  {
-    id: "16hbajsabsd",
-    name: "Calabar",
-  },
-  {
-    id: "nahs75a5sg",
-    name: "Lagos",
-  },
-  {
-    id: "667atsas",
-    name: "Maiduguri",
-  },
-  {
-    id: "hsyasajs",
-    name: "Anambra",
-  },
-  {
-    id: "djsjudksjd",
-    name: "Benue",
-  },
-  {
-    id: "sdhyaysdj",
-    name: "Kaduna",
-  },
-  {
-    id: "suudydjsjd",
-    name: "Abuja",
-  },
-];
+import stocks from "../stonks";
+import axios from "axios";
+import Swiper from "react-native-swiper";
 
 var buySell = [
   { label: "Buy", value: 0 },
@@ -72,17 +36,27 @@ export default function ChatScreen({ navigation, route }) {
   const [selectedItems, setSelectedItems] = useState([]);
   const multiSelect = useRef(null);
   const [selected, setSelected] = useState(0);
+  const [polls, setPolls] = useState([]);
   useEffect(() => {
     setSocket(io(ngrok));
+    return () => socket?.disconnect();
   }, []);
   useEffect(() => {
     if (socket) {
       socket.on("connect", () => {
         console.log("connected!");
       });
+      socket.on("init", (data) => {
+        setChatMessages(data.messages);
+        setPolls(data.polls);
+        console.log(data);
+      });
       socket.on("message", (msg) => {
         // Messages need type (poll, messsage, advice from bot)
         setChatMessages([...chatMessages, msg]);
+      });
+      socket.on("poll", (poll) => {
+        setPolls([...polls, poll]);
       });
     }
   }, [socket, chatMessages]);
@@ -94,24 +68,68 @@ export default function ChatScreen({ navigation, route }) {
     }
   };
 
+  const createPoll = (id) => {
+    const pollTemplate = {
+      pollId: id,
+      totalVotes: 0,
+      voters: [],
+      votes: {},
+      type: selected >= 0,
+      stock: getStockById(selectedItems),
+      action: buySell
+        .find((prop) => prop.value == selected)
+        .label.toLocaleLowerCase(),
+    };
+    socket.emit("poll", pollTemplate);
+  };
+
+  const getStockById = (id) => {
+    return stocks.find((item) => item.id == id);
+  };
+
   navigation.setOptions({ title: route.params.groupName });
 
   return (
     <View style={styles.container}>
-      <Poll
-        data={{
-          type: 1,
-          question: "Should we sell Tesla stocks?",
-          ticker: "TSLA",
-          votes: {
-            yes: 14,
-            dick: 69,
-            no: 1,
-          },
-          voters: [],
-          totalVotes: 84,
+      <View
+        style={{
+          height: polls.length == 0 ? "10%" : "40%",
         }}
-      />
+      >
+        <Text style={styles.pollsHeader}>Polls</Text>
+        {polls.length > 0 ? (
+          <>
+            <Swiper>
+              <Poll
+                data={{
+                  pollId: 69,
+                  type: true,
+                  stock: {
+                    id: 1,
+                    tick: "IBM",
+                    name: "IBM",
+                  },
+                  action: "sell",
+                  votes: {
+                    yes: 14,
+                    dick: 69,
+                    no: 1,
+                  },
+                  voters: [],
+                  totalVotes: 84,
+                }}
+              />
+              {polls.map((poll) => {
+                return <Poll key={poll.id} data={poll} />;
+              })}
+            </Swiper>
+          </>
+        ) : (
+          <Text style={styles.pollsAltText}>
+            There are no active polls for this group.
+          </Text>
+        )}
+      </View>
       <FlatList
         data={chatMessages}
         style={styles.messagesContainer}
@@ -158,7 +176,7 @@ export default function ChatScreen({ navigation, route }) {
                 <Text style={styles.label}>Please select a stock: </Text>
                 <MultiSelect
                   // hideTags
-                  items={items}
+                  items={stocks}
                   uniqueKey="id"
                   ref={multiSelect}
                   single
@@ -188,7 +206,7 @@ export default function ChatScreen({ navigation, route }) {
                     marginHorizontal: 20,
                   }}
                 />
-                {selectedItems.length > 0 && (
+                {selectedItems.length > 0 && selected >= 0 && (
                   <View style={styles.questionContainer}>
                     <FontAwesome5 name="question" size={24} />
                     <Text style={styles.question}>
@@ -196,16 +214,17 @@ export default function ChatScreen({ navigation, route }) {
                       {buySell
                         .find((prop) => prop.value == selected)
                         .label.toLocaleLowerCase()}{" "}
-                      the {items.find((item) => item.id == selectedItems).name}{" "}
-                      stock?
+                      the {getStockById(selectedItems).name} (
+                      {getStockById(selectedItems).tick}) stock?
                     </Text>
                   </View>
                 )}
                 <RadioForm
                   style={styles.radioOptions}
                   radio_props={buySell}
-                  initial={0}
+                  initial={-1}
                   onPress={(value) => {
+                    console.log(value);
                     setSelected(value);
                   }}
                 />
@@ -219,7 +238,34 @@ export default function ChatScreen({ navigation, route }) {
                 </View>
               </Tab>
             </Tabs>
-            <Button title="Create Poll" onPress={() => setVisible(false)} />
+            <Button
+              title="Create Poll"
+              onPress={() => {
+                const pollData = {
+                  type: buySell
+                    .find((prop) => prop.value == selected)
+                    .label.toLocaleLowerCase(),
+                  name: getStockById(selectedItems).name,
+                  topic: getStockById(selectedItems).tick,
+                };
+                console.log(pollData);
+                axios
+                  .post(
+                    "https://us-central1-aiot-fit-xlab.cloudfunctions.net/addsinglepoll",
+                    pollData
+                  )
+                  .then((res) => res.data)
+                  .then((res) => {
+                    createPoll(res.id);
+                    setSelectedItems([]);
+                    setSelected(-1);
+                    setVisible(false);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}
+            />
           </View>
         </View>
       </Modal>
@@ -254,6 +300,16 @@ const styles = StyleSheet.create({
   },
   pollContainer: {
     flex: 1,
+  },
+  pollsHeader: {
+    marginTop: 15,
+    fontWeight: "bold",
+    fontSize: 28,
+    marginBottom: 5,
+    marginHorizontal: 10,
+  },
+  pollsAltText: {
+    marginHorizontal: 10,
   },
   questionContainer: {
     flexDirection: "row",

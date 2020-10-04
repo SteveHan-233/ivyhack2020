@@ -28,14 +28,21 @@ mongoose.connection.on("error", (err) => {
 });
 
 const messages = [];
+const polls = [];
 io.on("connection", (socket) => {
   console.log("a user connected :D");
+  io.emit("init", { messages, polls });
   // use groupid as socket?
   socket.on("message", (msg) => {
     console.log(msg);
     messages.push(msg);
     console.log(messages);
     io.emit("message", msg);
+  });
+  socket.on("poll", (poll) => {
+    polls.push(poll);
+    console.log(polls);
+    io.emit("poll", poll);
   });
   socket.on("disconnect", () => {
     console.log("a user disconnected :(");
