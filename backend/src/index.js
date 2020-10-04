@@ -2,11 +2,8 @@ require('./models/User');
 const express = require('express');
 const authRoutes = require('./routes/authRoutes');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const requireAuth = require('./middlewares/requireAuth');
-const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const { measureMemory } = require('vm');
 
 const app = express();
