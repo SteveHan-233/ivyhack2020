@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
+import { View, StyleSheet, Text, Button, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "react-native-elements";
 import Modal from "react-native-modal";
@@ -68,7 +68,12 @@ export default function Poll({ data, socket }) {
     <>
       <View style={styles.container}>
         <View style={styles.header}>
-          <FontAwesome name="question-circle" size={16} />
+          <FontAwesome
+            name="question-circle"
+            size={30}
+            color="grey"
+            style={{ marginRight: 10 }}
+          />
           <Text style={styles.question}>{question}</Text>
         </View>
         {stockSelected && stockSelected.ticker && (
@@ -79,7 +84,7 @@ export default function Poll({ data, socket }) {
             change={stockSelected.change}
             range={stockSelected.range}
             name={stockSelected.name}
-            style={{ padding: 10 }}
+            style={{ padding: 10, marginTop: 5 }}
           />
         )}
 
@@ -127,7 +132,12 @@ export default function Poll({ data, socket }) {
           )}
         </View>
         <Text style={styles.total}>Total Votes: {pollData.totalVotes}</Text>
-        <Button title="Vote" onPress={() => setVisible(true)} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setVisible(true)}
+        >
+          <Text style={styles.button_text}>Vote</Text>
+        </TouchableOpacity>
       </View>
       <Modal
         isVisible={visible}
@@ -136,7 +146,12 @@ export default function Poll({ data, socket }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
-            <FontAwesome name="question-circle" size={24} />
+            <FontAwesome
+              name="question-circle"
+              size={30}
+              color="grey"
+              style={{ marginRight: 10 }}
+            />
             <Text style={styles.modalHeaderText}>{question}</Text>
           </View>
           <View style={styles.optionsContainer}>
@@ -160,28 +175,40 @@ export default function Poll({ data, socket }) {
               onChangeText={(e) => setNumVotes(e)}
             />
           </View>
-          <Button
-            title="Submit Vote"
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => {
               submitVote();
               setVisible(false);
             }}
-          />
+          >
+            <Text style={styles.button_text}>Vote</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </>
   );
 }
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#fff",
+    padding: 10,
+    margin: 10,
+    borderRadius: 15,
+  },
+  button_text: {
+    textAlign: "center",
+    fontWeight: "800",
+    textTransform: "uppercase",
+  },
   container: {
-    backgroundColor: "#ddd",
-    marginVertical: 10,
+    backgroundColor: "#eee",
     marginHorizontal: 20,
     padding: 20,
     paddingBottom: 0,
+    paddingTop: 10,
     borderRadius: 10,
-    height: "84%",
-    // flex: 1,
+    height: "88%",
   },
   modalContainer: {
     backgroundColor: "#fff",
@@ -192,7 +219,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     flexDirection: "row",
     marginTop: 15,
-    marginBottom: 5,
+    marginBottom: 15,
   },
   modalHeaderText: {
     fontWeight: "bold",
@@ -204,10 +231,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
+    alignItems: "center",
   },
   question: {
     marginHorizontal: 5,
-    fontWeight: "bold",
+    fontWeight: "700",
+    fontSize: 16,
   },
   bar: {
     flexDirection: "row",

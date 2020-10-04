@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   ScrollView,
   View,
-  Text,
   TextInput,
   StyleSheet,
   FlatList,
   TouchableOpacity,
   Button,
 } from "react-native";
+import { Text } from "react-native-elements";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import io from "socket.io-client";
 import ChatBubble from "../components/ChatBubble";
@@ -238,8 +238,8 @@ export default function ChatScreen({ navigation, route }) {
                       {buySell
                         .find((prop) => prop.value == selected)
                         .label.toLocaleLowerCase()}{" "}
-                      the {getStockById(selectedItems)?.name} (
-                      {getStockById(selectedItems)?.ticker}) stock?
+                      the {getStockById(selectedItems).name} (
+                      {getStockById(selectedItems).ticker}) stock?
                     </Text>
                   </View>
                 )}
@@ -319,9 +319,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginTop: 15,
-    fontWeight: "bold",
-    fontSize: 28,
-    marginBottom: 5,
+    fontWeight: "800",
+    fontSize: 30,
+    marginBottom: 15,
   },
   label: {
     marginHorizontal: 10,
@@ -333,9 +333,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pollsHeader: {
-    fontWeight: "bold",
-    fontSize: 28,
-    // marginBottom: 5,
+    marginTop: 10,
+    fontWeight: "800",
+    fontSize: 30,
+    marginBottom: 5,
     marginHorizontal: 10,
   },
   pollsAltText: {

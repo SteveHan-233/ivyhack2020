@@ -79,10 +79,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     padding: 30,
-    shadowOffset: { width: 0, height: 1 },
-    shadowColor: '#888',
-    shadowOpacity: 0.09,
-    shadowRadius: 20,
     height: 570,
   },
   subtitle: {

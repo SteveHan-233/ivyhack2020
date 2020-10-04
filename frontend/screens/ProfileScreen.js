@@ -1,19 +1,18 @@
-import React from "react";
+import React from 'react';
 import {
   SafeAreaView,
   FlatList,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   Dimensions,
-} from "react-native";
-import { Avatar } from "react-native-elements";
-import { useSelector } from "react-redux";
-import { PieChart } from "react-native-chart-kit";
-import chatlist from "../chatList.json";
+} from 'react-native';
+import { Avatar, Text } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { PieChart } from 'react-native-chart-kit';
+import chatlist from '../chatList.json';
 
-const screenWidth = Dimensions.get("window").width * 0.8;
+const screenWidth = Dimensions.get('window').width * 0.8;
 
 export default function ProfileScreen({ navigation }) {
   const username = useSelector((state) => state.auth.username);
@@ -30,31 +29,31 @@ export default function ProfileScreen({ navigation }) {
 
   const data = [
     {
-      name: "GOOGL",
+      name: 'GOOGL',
       population: 30.9225,
       color: randColor(),
-      legendFontColor: "#7F7F7F",
+      legendFontColor: '#7F7F7F',
       legendFontSize: 15,
     },
     {
-      name: "W",
+      name: 'W',
       population: 16.0797,
       color: randColor(),
-      legendFontColor: "#7F7F7F",
+      legendFontColor: '#7F7F7F',
       legendFontSize: 15,
     },
     {
-      name: "COF",
+      name: 'COF',
       population: 56.8974,
       color: randColor(),
-      legendFontColor: "#7F7F7F",
+      legendFontColor: '#7F7F7F',
       legendFontSize: 15,
     },
     {
-      name: "IBM",
+      name: 'IBM',
       population: 19.7904,
       color: randColor(),
-      legendFontColor: "#7F7F7F",
+      legendFontColor: '#7F7F7F',
       legendFontSize: 15,
     },
   ];
@@ -68,7 +67,7 @@ export default function ProfileScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Avatar source={{ uri: pfp }} rounded size={200} />
-          <Text style={{ fontWeight: "bold", color: "#363636", fontSize: 32 }}>
+          <Text style={{ fontWeight: '800', color: '#363636', fontSize: 40 }}>
             {username}
           </Text>
         </View>
@@ -82,7 +81,7 @@ export default function ProfileScreen({ navigation }) {
             accessor="population"
             backgroundColor="transparent"
           />
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.left}>
               <Text style={styles.categoryLabel}>Total Invested:</Text>
             </View>
@@ -90,7 +89,7 @@ export default function ProfileScreen({ navigation }) {
               <Text>$50</Text>
             </View>
           </View>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.left}>
               <Text style={styles.categoryLabel}>Current Balance:</Text>
             </View>
@@ -98,12 +97,12 @@ export default function ProfileScreen({ navigation }) {
               <Text>$123.69</Text>
             </View>
           </View>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={styles.left}>
               <Text style={styles.categoryLabel}>% Change:</Text>
             </View>
             <View style={styles.right}>
-              <Text style={{ color: "#060", fontWeight: "bold" }}>147.38%</Text>
+              <Text style={{ color: '#060', fontWeight: 'bold' }}>147.38%</Text>
             </View>
           </View>
         </View>
@@ -112,16 +111,25 @@ export default function ProfileScreen({ navigation }) {
           <FlatList
             data={[
               {
-                name: "Stonks Squad",
+                name: 'Stonks Squad',
                 uri:
-                  "https://pbs.twimg.com/profile_images/1149577551708184576/6KG41LLu_400x400.jpg",
+                  'https://pbs.twimg.com/profile_images/1149577551708184576/6KG41LLu_400x400.jpg',
               },
               ...chatlist,
             ]}
             renderItem={({ item, index }) => (
               <View style={styles.chatContainer}>
                 <Avatar rounded source={{ uri: item.uri }} size={45} />
-                <Text style={{ marginLeft: 5, fontSize: 26 }}>{item.name}</Text>
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    fontSize: 20,
+                    fontWeight: '700',
+                    color: '#555',
+                  }}
+                >
+                  {item.name}
+                </Text>
               </View>
             )}
           />
@@ -134,23 +142,26 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
+    alignItems: 'center',
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 50,
+    marginBottom: 30,
   },
   section: {
-    borderColor: "#aaa",
-    borderWidth: 1,
     borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
     marginVertical: 10,
+    marginHorizontal: 30,
+    backgroundColor: '#fff',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
   },
   overview: {
-    width: 390,
+    width: 350,
   },
   left: {
     flex: 2,
@@ -158,27 +169,28 @@ const styles = StyleSheet.create({
   },
   right: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   groups: {
-    height: 400,
+    height: 500,
   },
   sectionLabel: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 24,
     marginVertical: 5,
   },
   categoryLabel: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   chatContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderRadius: 15,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     marginVertical: 5,
-    width: 350,
-    alignItems: "center",
+    marginHorizontal: 10,
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
   },
 });
