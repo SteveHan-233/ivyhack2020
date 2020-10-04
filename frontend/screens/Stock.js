@@ -56,7 +56,13 @@ const Stock = () => {
           <View style={{ marginVertical: 70 }}>
             <Text
               h1
-              h1Style={{ fontWeight: '800', marginBottom: 20, marginLeft: 30 }}
+              h1Style={{
+                fontWeight: '800',
+                fontSize: 50,
+                marginLeft: 30,
+                marginTop: 30,
+                marginBottom: 10,
+              }}
             >
               Stocks
             </Text>

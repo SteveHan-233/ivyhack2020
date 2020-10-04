@@ -15,7 +15,7 @@ const StockPreview = ({ ticker, data, price, change, range }) => {
     );
   };
   return (
-    <View style={[styles.bg, { shadowColor: color }]}>
+    <View style={[styles.bg, { shadowColor: '#333' }]}>
       <View>
         <Text style={styles.ticker}>{ticker}</Text>
         <Text style={[styles.price, { color: color }]}>${price}</Text>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     padding: 30,
     flexDirection: 'row',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.07,
     shadowRadius: 20,
     alignItems: 'center',
     justifyContent: 'space-between',

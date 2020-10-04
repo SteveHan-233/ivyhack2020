@@ -1,9 +1,9 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import ChatStack from "../navigation/ChatStackNavigator";
-import Stock from "../screens/Stock";
-import ProfileScreen from "../screens/ProfileScreen";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import ChatStack from '../navigation/ChatStackNavigator';
+import Stock from '../screens/Stock';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,14 +16,14 @@ export default function RootBottomNavigator() {
           let iconName;
 
           switch (route.name) {
-            case "ChatStack":
-              iconName = "bubbles";
+            case 'ChatStack':
+              iconName = 'bubbles';
               break;
-            case "StockStack":
-              iconName = "graph";
+            case 'StockStack':
+              iconName = 'graph';
               break;
-            case "ProfileStack":
-              iconName = "user";
+            case 'ProfileStack':
+              iconName = 'user';
               break;
           }
 
@@ -32,13 +32,13 @@ export default function RootBottomNavigator() {
         lazy: false,
       })}
       tabBarOptions={{
-        activeTintColor: "#69f",
-        inactiveTintColor: "#666",
+        activeTintColor: '#69f',
+        inactiveTintColor: '#666',
         labelStyle: {
-          fontWeight: "bold",
+          fontWeight: 'bold',
         },
         style: {
-          shadowColor: '#333',
+          shadowColor: '#3084FF',
           shadowOpacity: 0.15,
           shadowRadius: 20,
           backgroundColor: '#fff',
@@ -50,21 +50,21 @@ export default function RootBottomNavigator() {
         name="ChatStack"
         component={ChatStack}
         options={{
-          tabBarLabel: "Chat",
+          tabBarLabel: 'Chat',
         }}
       />
       <Tab.Screen
         name="StockStack"
         component={Stock}
         options={{
-          tabBarLabel: "Stocks",
+          tabBarLabel: 'Stocks',
         }}
       />
       <Tab.Screen
         name="ProfileStack"
         component={ProfileScreen}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: 'Profile',
         }}
       />
     </Tab.Navigator>
