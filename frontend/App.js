@@ -9,6 +9,7 @@ import RootNav from './navigation/RootNav';
 import { loadStocks } from './actions/stockActions';
 
 const store = createStore(AuthReducer, applyMiddleware(thunk));
+console.disableYellowBox = true;
 
 store.dispatch(loadStocks());
 
