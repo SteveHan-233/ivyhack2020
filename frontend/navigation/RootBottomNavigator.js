@@ -36,6 +36,13 @@ export default function RootBottomNavigator() {
         labelStyle: {
           fontWeight: 'bold',
         },
+        style: {
+          shadowColor: '#333',
+          shadowOpacity: 0.15,
+          shadowRadius: 20,
+          backgroundColor: '#fff',
+          borderTopWidth: 0,
+        },
       }}
     >
       <Tab.Screen

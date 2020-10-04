@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, FlatList } from 'react-native';
 import { Text } from 'react-native-elements';
 import Container from '../components/Container';
 import { SlideAreaChart } from 'react-native-slide-charts';
@@ -31,33 +31,42 @@ const Stock = () => {
       />
     ) : null;
   };
+
+  const renderStock = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        setStockSelected(item);
+        sheetRef.current.snapTo(0);
+      }}
+    >
+      <StockPreview
+        ticker={item.ticker}
+        data={item.data}
+        price={item.price}
+        change={item.change}
+        range={item.range}
+        key={item.ticker}
+      />
+    </TouchableOpacity>
+  );
   return (
     <>
       <BlurredStatusBar
         children={
-          <Container>
-            <Text h1 h1Style={{ fontWeight: '800', marginBottom: 20 }}>
+          <View style={{ marginVertical: 70 }}>
+            <Text
+              h1
+              h1Style={{ fontWeight: '800', marginBottom: 20, marginLeft: 30 }}
+            >
               Stocks
             </Text>
 
-            {stocks?.map((stock) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setStockSelected(stock);
-                  sheetRef.current.snapTo(0);
-                }}
-              >
-                <StockPreview
-                  ticker={stock.ticker}
-                  data={stock.data}
-                  price={stock.price}
-                  change={stock.change}
-                  range={stock.range}
-                  key={stock.ticker}
-                />
-              </TouchableOpacity>
-            ))}
-          </Container>
+            <FlatList
+              data={stocks}
+              renderItem={renderStock}
+              keyExtractor={(item) => item.ticker}
+            />
+          </View>
         }
       />
       <BottomSheet
