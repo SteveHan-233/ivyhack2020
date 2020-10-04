@@ -6,8 +6,11 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import AuthReducer from './reducers/AuthReducer';
 import RootNav from './navigation/RootNav';
+import { loadStocks } from './actions/stockActions';
 
 const store = createStore(AuthReducer, applyMiddleware(thunk));
+
+store.dispatch(loadStocks());
 
 export default function App() {
   return (

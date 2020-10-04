@@ -19,9 +19,9 @@ export default function ChatList({ navigation }) {
     uri:
       "https://pbs.twimg.com/profile_images/1149577551708184576/6KG41LLu_400x400.jpg",
     lastMessage: {
-      from: "",
-      message: "",
-      time: "",
+      from: "StonkBot",
+      message: "Welcome to Stonks Squad!",
+      time: new Date().getTime(),
     },
   });
   navigation.setOptions({ header: () => null, title: "Chats" });

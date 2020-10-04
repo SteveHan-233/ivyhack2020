@@ -16,6 +16,7 @@
     "@react-navigation/stack": "^5.9.2",
     "axios": "^0.20.0",
     "expo": "~39.0.2",
+    "expo-blur": "~8.2.0",
     "expo-status-bar": "~1.0.2",
     "moment": "^2.29.0",
     "native-base": "^2.13.14",
@@ -36,6 +37,7 @@
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.2",
     "react-redux": "^7.2.1",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "socket.io-client": "^2.3.1"

@@ -18,7 +18,7 @@ import MultiSelect from "react-native-multiple-select";
 import RadioForm from "react-native-simple-radio-button";
 import Poll from "../components/Poll";
 import { ngrok } from "../config";
-import stocks from "../stonks";
+import stocks from "../data/stonks.json";
 import axios from "axios";
 import Swiper from "react-native-swiper";
 import { useSelector } from "react-redux";
@@ -218,7 +218,7 @@ export default function ChatScreen({ navigation, route }) {
                         .find((prop) => prop.value == selected)
                         .label.toLocaleLowerCase()}{" "}
                       the {getStockById(selectedItems).name} (
-                      {getStockById(selectedItems).tick}) stock?
+                      {getStockById(selectedItems).ticker}) stock?
                     </Text>
                   </View>
                 )}
@@ -252,7 +252,7 @@ export default function ChatScreen({ navigation, route }) {
                           .label.toLocaleLowerCase()
                       : "buy",
                   name: getStockById(selectedItems).name,
-                  topic: getStockById(selectedItems).tick,
+                  topic: getStockById(selectedItems).ticker,
                 };
                 console.log(pollData);
                 axios

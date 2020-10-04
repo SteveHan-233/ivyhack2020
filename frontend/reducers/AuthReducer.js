@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import StockReducer from "./StockReducer";
 
 const initialState = { error: "", token: null, username: "", pfp: "" };
 
@@ -20,4 +21,5 @@ const authReducer = (state = initialState, action) => {
 
 export default combineReducers({
   auth: authReducer,
+  stock: StockReducer,
 });
