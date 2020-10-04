@@ -4,7 +4,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "react-native-elements";
 import Modal from "react-native-modal";
 import RadioForm from "react-native-simple-radio-button";
-// import Button from "./Button";
 
 export default function Poll({ data }) {
   const [visible, setVisible] = useState();

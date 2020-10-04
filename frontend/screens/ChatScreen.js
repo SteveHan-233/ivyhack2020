@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  ScrollView,
   View,
   Text,
   TextInput,
@@ -20,6 +21,7 @@ import { ngrok } from "../config";
 import stocks from "../stonks";
 import axios from "axios";
 import Swiper from "react-native-swiper";
+import { useSelector } from "react-redux";
 
 var buySell = [
   { label: "Buy", value: 0 },
@@ -35,8 +37,10 @@ export default function ChatScreen({ navigation, route }) {
 
   const [selectedItems, setSelectedItems] = useState([]);
   const multiSelect = useRef(null);
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(-1);
   const [polls, setPolls] = useState([]);
+  const username = useSelector((state) => state.auth.username);
+  const pfp = useSelector((state) => state.auth.pfp);
   useEffect(() => {
     setSocket(io(ngrok));
     return () => socket?.disconnect();
@@ -49,7 +53,6 @@ export default function ChatScreen({ navigation, route }) {
       socket.on("init", (data) => {
         setChatMessages(data.messages);
         setPolls(data.polls);
-        console.log(data);
       });
       socket.on("message", (msg) => {
         // Messages need type (poll, messsage, advice from bot)
@@ -63,7 +66,20 @@ export default function ChatScreen({ navigation, route }) {
 
   const submitChatMessage = () => {
     if (chatMessage.trim().length != 0) {
-      socket.emit("message", chatMessage);
+      const messageTemplate = {
+        from: username,
+        message: chatMessage,
+        time: new Date().getTime(),
+        // Change when adding user
+        pfp,
+      };
+      if (route.params.setChatData) {
+        route.params.setChatData({
+          ...route.params.chat,
+          lastMessage: messageTemplate,
+        });
+      }
+      socket.emit("message", messageTemplate);
       setChatMessage("");
     }
   };
@@ -76,9 +92,12 @@ export default function ChatScreen({ navigation, route }) {
       votes: {},
       type: selected >= 0,
       stock: getStockById(selectedItems),
-      action: buySell
-        .find((prop) => prop.value == selected)
-        .label.toLocaleLowerCase(),
+      action:
+        selected >= 0
+          ? buySell
+              .find((prop) => prop.value == selected)
+              .label.toLocaleLowerCase()
+          : "buy",
     };
     socket.emit("poll", pollTemplate);
   };
@@ -87,7 +106,7 @@ export default function ChatScreen({ navigation, route }) {
     return stocks.find((item) => item.id == id);
   };
 
-  navigation.setOptions({ title: route.params.groupName });
+  navigation.setOptions({ title: route.params.chat.name });
 
   return (
     <View style={styles.container}>
@@ -100,25 +119,6 @@ export default function ChatScreen({ navigation, route }) {
         {polls.length > 0 ? (
           <>
             <Swiper>
-              <Poll
-                data={{
-                  pollId: 69,
-                  type: true,
-                  stock: {
-                    id: 1,
-                    tick: "IBM",
-                    name: "IBM",
-                  },
-                  action: "sell",
-                  votes: {
-                    yes: 14,
-                    dick: 69,
-                    no: 1,
-                  },
-                  voters: [],
-                  totalVotes: 84,
-                }}
-              />
               {polls.map((poll) => {
                 return <Poll key={poll.id} data={poll} />;
               })}
@@ -135,7 +135,11 @@ export default function ChatScreen({ navigation, route }) {
         data={chatMessages}
         style={styles.messagesContainer}
         renderItem={({ item, index }) => (
-          <ChatBubble key={index} message={item} left={true} />
+          <ChatBubble
+            key={index}
+            message={item}
+            left={item.from !== username}
+          />
         )}
       />
       <View style={styles.actionPanel}>
@@ -243,9 +247,12 @@ export default function ChatScreen({ navigation, route }) {
               title="Create Poll"
               onPress={() => {
                 const pollData = {
-                  type: buySell
-                    .find((prop) => prop.value == selected)
-                    .label.toLocaleLowerCase(),
+                  type:
+                    selected >= 0
+                      ? buySell
+                          .find((prop) => prop.value == selected)
+                          .label.toLocaleLowerCase()
+                      : "buy",
                   name: getStockById(selectedItems).name,
                   topic: getStockById(selectedItems).tick,
                 };

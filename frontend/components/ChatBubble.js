@@ -30,13 +30,13 @@ export default function ChatBubble({ message, left }) {
   return (
     <Pressable style={styles.container}>
       <View style={styles.avatar}>
-        {left && <Avatar rounded source={{ uri: message }} />}
+        {left && <Avatar rounded source={{ uri: message.pfp }} />}
       </View>
       <View style={styles.message}>
-        <Text>{message}</Text>
+        <Text>{message.message}</Text>
       </View>
       <View style={styles.avatar}>
-        {!left && <Avatar rounded source={{ uri: message }} />}
+        {!left && <Avatar rounded source={{ uri: message.pfp }} />}
       </View>
     </Pressable>
   );

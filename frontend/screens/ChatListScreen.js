@@ -9,153 +9,37 @@ import {
 } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 import ChatListItem from "../components/ChatListItem";
+import organizers from "../chatList.json";
 
 export default function ChatList({ navigation }) {
-  const chats = [
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 0,
+  const [chatData, setChatData] = useState({
+    name: "Stonks Squad",
+    uri:
+      "https://pbs.twimg.com/profile_images/1149577551708184576/6KG41LLu_400x400.jpg",
+    lastMessage: {
+      from: "",
+      message: "",
+      time: "",
     },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 1,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 2,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 3,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 4,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 5,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 6,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 7,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 8,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 9,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 10,
-    },
-    {
-      name: "YEET",
-      img: "yeet",
-      lastActive: new Date().getTime(),
-      lastMessage: {
-        from: "YeEt",
-        message: "yEEt",
-        timestamp: new Date().getTime(),
-      },
-      uid: 11,
-    },
-  ];
+  });
   navigation.setOptions({ header: () => null, title: "Chats" });
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerText}>Chats</Text>
+      <ChatListItem
+        key={-1}
+        chat={chatData}
+        setChatData={setChatData}
+        bottomDivider={false}
+        navigation={navigation}
+      />
       <FlatList
-        data={chats}
+        data={organizers}
         renderItem={({ item, index }) => (
           <ChatListItem
             key={index}
             chat={item}
-            bottomDivider={index == chats.length - 1}
+            bottomDivider={index == organizers.length - 1}
             navigation={navigation}
           />
         )}
