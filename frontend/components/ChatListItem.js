@@ -6,7 +6,10 @@ export default function ChatListItem({ navigation, chat, bottomDivider }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("ChatScreen", { chatId: chat.uid });
+        navigation.navigate("ChatScreen", {
+          chatId: chat.uid,
+          groupName: "Stonks",
+        });
       }}
     >
       <ListItem key={chat.uid} topDivider bottomDivider={bottomDivider}>

@@ -145,7 +145,7 @@ export default function ChatList({ navigation }) {
       uid: 11,
     },
   ];
-  navigation.setOptions({ header: () => null });
+  navigation.setOptions({ header: () => null, title: "Chats" });
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerText}>Chats</Text>

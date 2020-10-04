@@ -4,6 +4,10 @@ const authRoutes = require('./routes/authRoutes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const requireAuth = require('./middlewares/requireAuth');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const { measureMemory } = require('vm');
 
 const app = express();
 
@@ -26,15 +30,18 @@ mongoose.connection.on('error', (err) => {
   console.error(err);
 });
 
-app.get('/', requireAuth, (req, res) => {
-  res.send(req.user.email);
-});
-
+const messages = [];
 io.on('connection', (socket) => {
   console.log('a user connected :D');
-  socket.on('chat message', (msg) => {
+  // use groupid as socket?
+  socket.on('message', (msg) => {
     console.log(msg);
-    io.emit('chat message', msg);
+    messages.push(msg);
+    console.log(messages);
+    io.emit('message', msg);
+  });
+  socket.on('disconnect', () => {
+    console.log('a user disconnected :(');
   });
 });
 
