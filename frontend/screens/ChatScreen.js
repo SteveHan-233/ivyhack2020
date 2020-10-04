@@ -72,7 +72,7 @@ export default function ChatScreen({ navigation, route }) {
   const multiSelect = useRef(null);
   const [selected, setSelected] = useState(0);
   useEffect(() => {
-    setSocket(io("http://127.0.0.1:4000"));
+    setSocket(io("http://321028fedbd0.ngrok.io"));
   }, []);
   useEffect(() => {
     if (socket) {
