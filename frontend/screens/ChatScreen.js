@@ -333,7 +333,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pollsHeader: {
-    marginTop: 10,
     fontWeight: "bold",
     fontSize: 28,
     // marginBottom: 5,
