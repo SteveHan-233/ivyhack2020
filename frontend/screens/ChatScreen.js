@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,28 +7,28 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
-} from "react-native";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
-import io from "socket.io-client";
-import ChatBubble from "../components/ChatBubble";
-import Modal from "react-native-modal";
-import { Container, Header, Content, Tab, Tabs } from "native-base";
-import MultiSelect from "react-native-multiple-select";
-import RadioForm from "react-native-simple-radio-button";
-import Poll from "../components/Poll";
-import { ngrok } from "../config";
-import stocks from "../stonks";
-import axios from "axios";
-import Swiper from "react-native-swiper";
+} from 'react-native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import io from 'socket.io-client';
+import ChatBubble from '../components/ChatBubble';
+import Modal from 'react-native-modal';
+import { Container, Header, Content, Tab, Tabs } from 'native-base';
+import MultiSelect from 'react-native-multiple-select';
+import RadioForm from 'react-native-simple-radio-button';
+import Poll from '../components/Poll';
+import { ngrok } from '../config';
+import stocks from '../data/stonks';
+import axios from 'axios';
+import Swiper from 'react-native-swiper';
 
 var buySell = [
-  { label: "Buy", value: 0 },
-  { label: "Sell", value: 1 },
+  { label: 'Buy', value: 0 },
+  { label: 'Sell', value: 1 },
 ];
 
 export default function ChatScreen({ navigation, route }) {
   const [socket, setSocket] = useState(null);
-  const [chatMessage, setChatMessage] = useState("");
+  const [chatMessage, setChatMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
 
   const [visible, setVisible] = useState(false);
@@ -43,19 +43,19 @@ export default function ChatScreen({ navigation, route }) {
   }, []);
   useEffect(() => {
     if (socket) {
-      socket.on("connect", () => {
-        console.log("connected!");
+      socket.on('connect', () => {
+        console.log('connected!');
       });
-      socket.on("init", (data) => {
+      socket.on('init', (data) => {
         setChatMessages(data.messages);
         setPolls(data.polls);
         console.log(data);
       });
-      socket.on("message", (msg) => {
+      socket.on('message', (msg) => {
         // Messages need type (poll, messsage, advice from bot)
         setChatMessages([...chatMessages, msg]);
       });
-      socket.on("poll", (poll) => {
+      socket.on('poll', (poll) => {
         setPolls([...polls, poll]);
       });
     }
@@ -63,8 +63,8 @@ export default function ChatScreen({ navigation, route }) {
 
   const submitChatMessage = () => {
     if (chatMessage.trim().length != 0) {
-      socket.emit("message", chatMessage);
-      setChatMessage("");
+      socket.emit('message', chatMessage);
+      setChatMessage('');
     }
   };
 
@@ -80,7 +80,7 @@ export default function ChatScreen({ navigation, route }) {
         .find((prop) => prop.value == selected)
         .label.toLocaleLowerCase(),
     };
-    socket.emit("poll", pollTemplate);
+    socket.emit('poll', pollTemplate);
   };
 
   const getStockById = (id) => {
@@ -93,7 +93,7 @@ export default function ChatScreen({ navigation, route }) {
     <View style={styles.container}>
       <View
         style={{
-          height: polls.length == 0 ? "10%" : "40%",
+          height: polls.length == 0 ? '10%' : '40%',
         }}
       >
         <Text style={styles.pollsHeader}>Polls</Text>
@@ -106,10 +106,10 @@ export default function ChatScreen({ navigation, route }) {
                   type: true,
                   stock: {
                     id: 1,
-                    tick: "IBM",
-                    name: "IBM",
+                    ticker: 'IBM',
+                    name: 'IBM',
                   },
-                  action: "sell",
+                  action: 'sell',
                   votes: {
                     yes: 14,
                     dick: 69,
@@ -163,7 +163,7 @@ export default function ChatScreen({ navigation, route }) {
       </View>
       <Modal
         isVisible={visible}
-        swipeDirection={"down"}
+        swipeDirection={'down'}
         onSwipeComplete={() => setVisible(false)}
       >
         <View style={styles.modalContainer}>
@@ -193,7 +193,7 @@ export default function ChatScreen({ navigation, route }) {
                   itemTextColor="#000"
                   displayKey="name"
                   searchInputStyle={{
-                    color: "#CCC",
+                    color: '#CCC',
                     marginVertical: 5,
                     padding: 5,
                   }}
@@ -211,12 +211,12 @@ export default function ChatScreen({ navigation, route }) {
                   <View style={styles.questionContainer}>
                     <FontAwesome5 name="question" size={24} />
                     <Text style={styles.question}>
-                      Should we{" "}
+                      Should we{' '}
                       {buySell
                         .find((prop) => prop.value == selected)
-                        .label.toLocaleLowerCase()}{" "}
+                        .label.toLocaleLowerCase()}{' '}
                       the {getStockById(selectedItems).name} (
-                      {getStockById(selectedItems).tick}) stock?
+                      {getStockById(selectedItems).ticker}) stock?
                     </Text>
                   </View>
                 )}
@@ -247,12 +247,12 @@ export default function ChatScreen({ navigation, route }) {
                     .find((prop) => prop.value == selected)
                     .label.toLocaleLowerCase(),
                   name: getStockById(selectedItems).name,
-                  topic: getStockById(selectedItems).tick,
+                  topic: getStockById(selectedItems).ticker,
                 };
                 console.log(pollData);
                 axios
                   .post(
-                    "https://us-central1-aiot-fit-xlab.cloudfunctions.net/addsinglepoll",
+                    'https://us-central1-aiot-fit-xlab.cloudfunctions.net/addsinglepoll',
                     pollData
                   )
                   .then((res) => res.data)
@@ -277,19 +277,19 @@ export default function ChatScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   modalContainer: {
-    height: "60%",
-    backgroundColor: "#fff",
+    height: '60%',
+    backgroundColor: '#fff',
     borderRadius: 25,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   headerText: {
     marginTop: 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 28,
     marginBottom: 5,
   },
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   pollsHeader: {
     marginTop: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 28,
     // marginBottom: 5,
     marginHorizontal: 10,
@@ -313,9 +313,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   questionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: "10%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: '10%',
     marginVertical: 10,
   },
   question: {
@@ -324,12 +324,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   radioOptions: {
-    marginHorizontal: "40%",
+    marginHorizontal: '40%',
   },
   messagesContainer: {},
   actionPanel: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   button: {
     marginHorizontal: 10,

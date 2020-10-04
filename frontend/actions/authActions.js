@@ -30,7 +30,7 @@ const signin = ({ email, password }) => async (dispatch) => {
 const tryLocalSignin = () => async (dispatch) => {
   const token = await AsyncStorage.getItem('token');
   if (token) {
-    dispatch({ type: signin, payload: token });
+    dispatch({ type: 'signin', payload: token });
   } else {
     navigate('Login');
   }

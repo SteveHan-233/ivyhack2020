@@ -1,0 +1,12 @@
+[
+  { "id": 0, "ticker": "UAL", "name": "United Airlines" },
+  { "id": 1, "ticker": "IBM", "name": "IBM" },
+  { "id": 2, "ticker": "W", "name": "Wayfair" },
+  { "id": 3, "ticker": "COF", "name": "Capital One" },
+  { "id": 4, "ticker": "GOOGL", "name": "Google Cloud" },
+  { "id": 5, "ticker": "AAPL", "name": "Apple" },
+  { "id": 6, "ticker": "AMZN", "name": "Amazon" },
+  { "id": 7, "ticker": "TSLA", "name": "Tesla" },
+  { "id": 8, "ticker": "AAL", "name": "American Airlines" },
+  { "id": 9, "ticker": "NFLX", "name": "Netflix" }
+]
