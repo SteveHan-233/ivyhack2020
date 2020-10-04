@@ -64,11 +64,11 @@ const StockDetail = ({ ticker, data, price, change, range, name }) => {
       </View>
       <View style={styles.row}>
         <Text style={styles.ticker}>High</Text>
-        <Text style={styles.stat}>{range[1].toFixed(2)}%</Text>
+        <Text style={styles.stat}>${range[1].toFixed(2)}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.ticker}>Low</Text>
-        <Text style={styles.stat}>{range[0].toFixed(2)}%</Text>
+        <Text style={styles.stat}>${range[0].toFixed(2)}</Text>
       </View>
     </View>
   );
