@@ -56,7 +56,7 @@ const items = [
   },
 ];
 
-var radio_props = [
+var buySell = [
   { label: "Buy", value: 0 },
   { label: "Sell", value: 1 },
 ];
@@ -99,12 +99,15 @@ export default function ChatScreen({ navigation, route }) {
     <View style={styles.container}>
       <Poll
         data={{
+          type: 1,
           question: "Should we sell Tesla stocks?",
+          ticker: "TSLA",
           votes: {
             yes: 14,
             dick: 69,
             no: 1,
           },
+          voters: [],
           totalVotes: 84,
         }}
       />
@@ -147,6 +150,7 @@ export default function ChatScreen({ navigation, route }) {
           <View style={styles.header}>
             <Text style={styles.headerText}>New Poll</Text>
           </View>
+          <View style={styles.date}></View>
           <View style={styles.pollContainer}>
             <Tabs>
               <Tab heading="Single Stock">
@@ -189,7 +193,7 @@ export default function ChatScreen({ navigation, route }) {
                     <FontAwesome5 name="question" size={24} />
                     <Text style={styles.question}>
                       Should we{" "}
-                      {radio_props
+                      {buySell
                         .find((prop) => prop.value == selected)
                         .label.toLocaleLowerCase()}{" "}
                       the {items.find((item) => item.id == selectedItems).name}{" "}
@@ -199,16 +203,23 @@ export default function ChatScreen({ navigation, route }) {
                 )}
                 <RadioForm
                   style={styles.radioOptions}
-                  radio_props={radio_props}
+                  radio_props={buySell}
                   initial={0}
                   onPress={(value) => {
                     setSelected(value);
                   }}
                 />
               </Tab>
-              <Tab heading="Multiple Stocks ">{/* <Tab2 /> */}</Tab>
+              <Tab heading="Multiple Stocks ">
+                <View style={styles.questionContainer}>
+                  <FontAwesome5 name="question" size={24} />
+                  <Text style={styles.question}>
+                    Which stock should we buy?
+                  </Text>
+                </View>
+              </Tab>
             </Tabs>
-            <Button title="Create Poll" style={styles.createPollButton} />
+            <Button title="Create Poll" onPress={() => setVisible(false)} />
           </View>
         </View>
       </Modal>
@@ -248,16 +259,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginHorizontal: "10%",
+    marginVertical: 10,
   },
   question: {
     fontSize: 18,
     marginHorizontal: 5,
+    marginBottom: 5,
   },
   radioOptions: {
     marginHorizontal: "40%",
-  },
-  createPollButton: {
-    marginVertical: 20,
   },
   messagesContainer: {},
   actionPanel: {
