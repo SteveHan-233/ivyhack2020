@@ -6,7 +6,9 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import { ListItem, Avatar } from "react-native-elements";
 import ChatListItem from "../components/ChatListItem";
 import organizers from "../chatList.json";
@@ -25,7 +27,12 @@ export default function ChatList({ navigation }) {
   navigation.setOptions({ header: () => null, title: "Chats" });
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Chats</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Chats</Text>
+        <TouchableOpacity style={styles.addButton}>
+          <MaterialIcons name="add" size={36} />
+        </TouchableOpacity>
+      </View>
       <ChatListItem
         key={-1}
         chat={chatData}
@@ -53,11 +60,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  headerText: {
-    fontSize: 32,
-    fontWeight: "bold",
+  header: {
+    flexDirection: "row",
     marginLeft: 10,
     marginTop: 30,
     marginBottom: 10,
+  },
+  headerText: {
+    fontSize: 32,
+    fontWeight: "bold",
+    flex: 1,
+  },
+  addButton: {
+    marginHorizontal: 10,
   },
 });

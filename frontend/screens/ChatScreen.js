@@ -106,8 +106,6 @@ export default function ChatScreen({ navigation, route }) {
     return stocks.find((item) => item.id == id);
   };
 
-  navigation.setOptions({ title: route.params.chat.name });
-
   return (
     <View style={styles.container}>
       <View
