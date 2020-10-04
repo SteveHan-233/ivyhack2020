@@ -52,7 +52,7 @@ export default function Poll({ data, socket }) {
         const temp = {
           ...pollData,
           totalVotes: !pollData.totalVotes
-            ? 0
+            ? voteTemplate.numVotes
             : pollData.totalVotes + voteTemplate.numVotes,
           votes: { ...pollData.votes },
         };
@@ -95,6 +95,7 @@ export default function Poll({ data, socket }) {
               .map((key, ind) => {
                 const numVotes = pollData.votes[key];
                 const total = pollData.totalVotes;
+                console.log(pollData);
                 return ind < 3 ? (
                   <>
                     <Text>

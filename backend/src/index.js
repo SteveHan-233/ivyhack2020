@@ -50,7 +50,9 @@ io.on("connection", (socket) => {
       if (poll.pollId === vote.pollId) {
         const res = {
           ...poll,
-          totalVotes: poll.totalVotes + vote.numVotes,
+          totalVotes: !poll.totalVotes
+            ? vote.numVotes
+            : poll.totalVotes + vote.numVotes,
           votes: { ...poll.votes },
           voters: [...poll.voters, vote.username],
         };

@@ -53,7 +53,6 @@ export default function ChatScreen({ navigation, route }) {
       socket.on("init", (data) => {
         setChatMessages(data.messages);
         setPolls(data.polls);
-        console.log(`init ${JSON.stringify(data.polls)}`);
       });
       socket.on("message", (msg) => {
         // Messages need type (poll, messsage, advice from bot)
