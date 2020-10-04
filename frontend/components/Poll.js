@@ -103,7 +103,8 @@ export default function Poll({ data }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ddd",
-    margin: 20,
+    marginVertical: 10,
+    marginHorizontal: 20,
     padding: 20,
     paddingBottom: 0,
     borderRadius: 10,
