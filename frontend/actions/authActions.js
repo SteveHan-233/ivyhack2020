@@ -1,6 +1,6 @@
 import api from '../api/backendApi';
 import AsyncStorage from '@react-native-community/async-storage';
-// import { navigate } from '../RootNavigation';
+import { navigate } from '../RootNavigation';
 
 const signup = ({ email, password }) => async (dispatch) => {
   try {
@@ -27,4 +27,13 @@ const signin = ({ email, password }) => async (dispatch) => {
   }
 };
 
-export { signin, signup };
+const tryLocalSignin = () => async (dispatch) => {
+  const token = await AsyncStorage.getItem('token');
+  if (token) {
+    dispatch({ type: signin, payload: token });
+  } else {
+    navigate('Login');
+  }
+};
+
+export { signin, signup, tryLocalSignin };

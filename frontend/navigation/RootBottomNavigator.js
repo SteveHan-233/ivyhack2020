@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import ChatStack from '../navigation/ChatStackNavigator';
+import Stock from '../screens/Stock';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,7 +47,7 @@ export default function RootBottomNavigator() {
       />
       <Tab.Screen
         name="StockStack"
-        component={ChatStack}
+        component={Stock}
         options={{
           tabBarLabel: 'Stocks',
         }}

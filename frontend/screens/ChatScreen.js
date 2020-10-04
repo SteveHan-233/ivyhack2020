@@ -166,7 +166,6 @@ export default function ChatScreen({ navigation, route }) {
                   selectedItems={selectedItems}
                   selectText="Select Stocks"
                   searchInputPlaceholderText="Search Stocks..."
-                  altFontFamily="ProximaNova-Light"
                   tagRemoveIconColor="#CCC"
                   tagBorderColor="#CCC"
                   tagTextColor="#CCC"

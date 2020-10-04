@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SigninFrom from '../components/SigninForm';
-import { signin } from '../actions/authActions';
+import { signin, tryLocalSignin } from '../actions/authActions';
 
 const Login = ({ navigation }) => {
+  useEffect(() => {
+    tryLocalSignin();
+  }, []);
   return (
     <SigninFrom
       title="Login"
