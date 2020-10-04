@@ -153,6 +153,7 @@ export default function ChatList({ navigation }) {
         data={chats}
         renderItem={({ item, index }) => (
           <ChatListItem
+            key={index}
             chat={item}
             bottomDivider={index == chats.length - 1}
             navigation={navigation}

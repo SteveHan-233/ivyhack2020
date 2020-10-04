@@ -9,6 +9,9 @@ import RadioForm from "react-native-simple-radio-button";
 export default function Poll({ data }) {
   const [visible, setVisible] = useState();
   const [selected, setSelected] = useState(0);
+  const question = data.type
+    ? `Should we ${data.action} ${data.stock.name} stocks?`
+    : "Which stock should we buy?";
   const getOptions = () => {
     const options = [];
     Object.keys(data.votes).forEach((key, index) => {
@@ -21,48 +24,54 @@ export default function Poll({ data }) {
       <View style={styles.container}>
         <View style={styles.header}>
           <FontAwesome name="question-circle" size={16} />
-          <Text style={styles.question}>{data.question}</Text>
+          <Text style={styles.question}>{question}</Text>
         </View>
         <View style={styles.results}>
-          {Object.keys(data.votes).map((key) => {
-            const numVotes = data.votes[key];
-            const totalVotes = data.totalVotes;
-            return (
-              <>
-                <Text>
-                  {key}: {numVotes}
-                </Text>
-                <View style={styles.bar}>
-                  <View
-                    style={{
-                      backgroundColor: "#69f",
-                      borderTopLeftRadius: 5,
-                      borderBottomLeftRadius: 5,
-                      flex:
-                        totalVotes == 0
-                          ? 0
-                          : Math.floor((numVotes / totalVotes) * 100),
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: "#fff",
-                      borderTopRightRadius: 5,
-                      borderBottomRightRadius: 5,
-                      flex:
-                        totalVotes == 0
-                          ? 0
-                          : Math.floor(
-                              ((totalVotes - numVotes) / totalVotes) * 100
-                            ),
-                    }}
-                  />
-                </View>
-              </>
-            );
-          })}
-          <Text style={styles.total}>Total Votes: {data.totalVotes}</Text>
+          {Object.keys(data.votes).length > 0 ? (
+            Object.keys(data.votes)
+              .sort((a, b) => data.votes[a] < data.votes[b])
+              .map((key, ind) => {
+                const numVotes = data.votes[key];
+                const totalVotes = data.totalVotes;
+                return ind < 3 ? (
+                  <>
+                    <Text>
+                      {key}: {numVotes}
+                    </Text>
+                    <View style={styles.bar}>
+                      <View
+                        style={{
+                          backgroundColor: "#69f",
+                          borderTopLeftRadius: 5,
+                          borderBottomLeftRadius: 5,
+                          flex:
+                            totalVotes == 0
+                              ? 0
+                              : Math.floor((numVotes / totalVotes) * 100),
+                        }}
+                      />
+                      <View
+                        style={{
+                          backgroundColor: "#fff",
+                          borderTopRightRadius: 5,
+                          borderBottomRightRadius: 5,
+                          flex:
+                            totalVotes == 0
+                              ? 0
+                              : Math.floor(
+                                  ((totalVotes - numVotes) / totalVotes) * 100
+                                ),
+                        }}
+                      />
+                    </View>
+                  </>
+                ) : null;
+              })
+          ) : (
+            <Text style={styles.emptyPoll}>Be the first!</Text>
+          )}
         </View>
+        <Text style={styles.total}>Total Votes: {data.totalVotes}</Text>
         <Button title="Vote" onPress={() => setVisible(true)} />
       </View>
       <Modal
@@ -73,7 +82,7 @@ export default function Poll({ data }) {
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
             <FontAwesome name="question-circle" size={24} />
-            <Text style={styles.modalHeaderText}>{data.question}</Text>
+            <Text style={styles.modalHeaderText}>{question}</Text>
           </View>
           <View style={styles.optionsContainer}>
             <RadioForm
@@ -95,8 +104,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ddd",
     margin: 20,
-    padding: 10,
+    padding: 20,
+    paddingBottom: 0,
     borderRadius: 10,
+    height: "75%",
   },
   modalContainer: {
     // height: "60%",
@@ -135,5 +146,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     fontWeight: "bold",
+  },
+  results: {
+    flex: 1,
+  },
+  emptyPoll: {
+    textAlign: "center",
+    marginVertical: 25,
   },
 });
