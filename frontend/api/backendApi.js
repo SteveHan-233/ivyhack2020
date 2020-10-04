@@ -1,6 +1,7 @@
 import axios from "axios";
+import { ngrok } from "../config";
 
 export default axios.create({
-  baseURL: "http://321028fedbd0.ngrok.io",
+  baseURL: ngrok,
   responseType: "json",
 });

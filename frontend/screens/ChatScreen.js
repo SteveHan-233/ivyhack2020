@@ -16,6 +16,7 @@ import { Container, Header, Content, Tab, Tabs } from "native-base";
 import MultiSelect from "react-native-multiple-select";
 import RadioForm from "react-native-simple-radio-button";
 import Poll from "../components/Poll";
+import { ngrok } from "../config";
 
 const items = [
   {
@@ -72,7 +73,7 @@ export default function ChatScreen({ navigation, route }) {
   const multiSelect = useRef(null);
   const [selected, setSelected] = useState(0);
   useEffect(() => {
-    setSocket(io("http://321028fedbd0.ngrok.io"));
+    setSocket(io(ngrok));
   }, []);
   useEffect(() => {
     if (socket) {
