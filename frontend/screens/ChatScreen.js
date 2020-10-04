@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,63 +7,63 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
-} from "react-native";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
-import io from "socket.io-client";
-import ChatBubble from "../components/ChatBubble";
-import Modal from "react-native-modal";
-import { Container, Header, Content, Tab, Tabs } from "native-base";
-import MultiSelect from "react-native-multiple-select";
-import RadioForm from "react-native-simple-radio-button";
-import Poll from "../components/Poll";
+} from 'react-native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import io from 'socket.io-client';
+import ChatBubble from '../components/ChatBubble';
+import Modal from 'react-native-modal';
+import { Container, Header, Content, Tab, Tabs } from 'native-base';
+import MultiSelect from 'react-native-multiple-select';
+import RadioForm from 'react-native-simple-radio-button';
+import Poll from '../components/Poll';
 
 const items = [
   {
-    id: "92iijs7yta",
-    name: "Ondo",
+    id: '92iijs7yta',
+    name: 'Ondo',
   },
   {
-    id: "a0s0a8ssbsd",
-    name: "Ogun",
+    id: 'a0s0a8ssbsd',
+    name: 'Ogun',
   },
   {
-    id: "16hbajsabsd",
-    name: "Calabar",
+    id: '16hbajsabsd',
+    name: 'Calabar',
   },
   {
-    id: "nahs75a5sg",
-    name: "Lagos",
+    id: 'nahs75a5sg',
+    name: 'Lagos',
   },
   {
-    id: "667atsas",
-    name: "Maiduguri",
+    id: '667atsas',
+    name: 'Maiduguri',
   },
   {
-    id: "hsyasajs",
-    name: "Anambra",
+    id: 'hsyasajs',
+    name: 'Anambra',
   },
   {
-    id: "djsjudksjd",
-    name: "Benue",
+    id: 'djsjudksjd',
+    name: 'Benue',
   },
   {
-    id: "sdhyaysdj",
-    name: "Kaduna",
+    id: 'sdhyaysdj',
+    name: 'Kaduna',
   },
   {
-    id: "suudydjsjd",
-    name: "Abuja",
+    id: 'suudydjsjd',
+    name: 'Abuja',
   },
 ];
 
 var radio_props = [
-  { label: "Buy", value: 0 },
-  { label: "Sell", value: 1 },
+  { label: 'Buy', value: 0 },
+  { label: 'Sell', value: 1 },
 ];
 
 export default function ChatScreen({ navigation, route }) {
   const [socket, setSocket] = useState(null);
-  const [chatMessage, setChatMessage] = useState("");
+  const [chatMessage, setChatMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
 
   const [visible, setVisible] = useState(false);
@@ -72,14 +72,14 @@ export default function ChatScreen({ navigation, route }) {
   const multiSelect = useRef(null);
   const [selected, setSelected] = useState(0);
   useEffect(() => {
-    setSocket(io("http://127.0.0.1:4000"));
+    setSocket(io('http://321028fedbd0.ngrok.io'));
   }, []);
   useEffect(() => {
     if (socket) {
-      socket.on("connect", () => {
-        console.log("connected!");
+      socket.on('connect', () => {
+        console.log('connected!');
       });
-      socket.on("message", (msg) => {
+      socket.on('message', (msg) => {
         // Messages need type (poll, messsage, advice from bot)
         setChatMessages([...chatMessages, msg]);
       });
@@ -88,8 +88,8 @@ export default function ChatScreen({ navigation, route }) {
 
   const submitChatMessage = () => {
     if (chatMessage.trim().length != 0) {
-      socket.emit("message", chatMessage);
-      setChatMessage("");
+      socket.emit('message', chatMessage);
+      setChatMessage('');
     }
   };
 
@@ -99,7 +99,7 @@ export default function ChatScreen({ navigation, route }) {
     <View style={styles.container}>
       <Poll
         data={{
-          question: "Should we sell Tesla stocks?",
+          question: 'Should we sell Tesla stocks?',
           votes: {
             yes: 14,
             dick: 69,
@@ -140,7 +140,7 @@ export default function ChatScreen({ navigation, route }) {
       </View>
       <Modal
         isVisible={visible}
-        swipeDirection={"down"}
+        swipeDirection={'down'}
         onSwipeComplete={() => setVisible(false)}
       >
         <View style={styles.modalContainer}>
@@ -170,7 +170,7 @@ export default function ChatScreen({ navigation, route }) {
                   itemTextColor="#000"
                   displayKey="name"
                   searchInputStyle={{
-                    color: "#CCC",
+                    color: '#CCC',
                     marginVertical: 5,
                     padding: 5,
                   }}
@@ -188,11 +188,11 @@ export default function ChatScreen({ navigation, route }) {
                   <View style={styles.questionContainer}>
                     <FontAwesome5 name="question" size={24} />
                     <Text style={styles.question}>
-                      Should we{" "}
+                      Should we{' '}
                       {radio_props
                         .find((prop) => prop.value == selected)
-                        .label.toLocaleLowerCase()}{" "}
-                      the {items.find((item) => item.id == selectedItems).name}{" "}
+                        .label.toLocaleLowerCase()}{' '}
+                      the {items.find((item) => item.id == selectedItems).name}{' '}
                       stock?
                     </Text>
                   </View>
@@ -219,19 +219,19 @@ export default function ChatScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   modalContainer: {
-    height: "60%",
-    backgroundColor: "#fff",
+    height: '60%',
+    backgroundColor: '#fff',
     borderRadius: 25,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   headerText: {
     marginTop: 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 28,
     marginBottom: 5,
   },
@@ -245,24 +245,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   questionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: "10%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: '10%',
   },
   question: {
     fontSize: 18,
     marginHorizontal: 5,
   },
   radioOptions: {
-    marginHorizontal: "40%",
+    marginHorizontal: '40%',
   },
   createPollButton: {
     marginVertical: 20,
   },
   messagesContainer: {},
   actionPanel: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   button: {
     marginHorizontal: 10,
