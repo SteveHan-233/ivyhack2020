@@ -4,20 +4,66 @@ import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "react-native-elements";
 import Modal from "react-native-modal";
 import RadioForm from "react-native-simple-radio-button";
+import { useSelector } from "react-redux";
+import StockPreview from "../components/StockPreview";
+import { TextInput } from "react-native-gesture-handler";
+import { interpolate } from "react-native-reanimated";
+import axios from "axios";
 
-export default function Poll({ data }) {
+export default function Poll({ data, socket }) {
+  const [pollData, setPollData] = useState(data);
   const [visible, setVisible] = useState();
   const [selected, setSelected] = useState(0);
-  const question = data.type
-    ? `Should we ${data.action} ${data.stock.name} stocks?`
+  const [numVotes, setNumVotes] = useState("1");
+  const question = pollData.type
+    ? `Should we ${pollData.action} ${pollData.stock.name} stocks?`
     : "Which stock should we buy?";
   const getOptions = () => {
     const options = [];
-    Object.keys(data.votes).forEach((key, index) => {
+    Object.keys(pollData.votes).forEach((key, index) => {
       options.push({ value: index, label: key });
     });
     return options;
   };
+  const stocks = useSelector((state) => state.stock);
+  const stockSelected = stocks.find(
+    (stock) => stock.ticker === pollData?.stock?.ticker
+  );
+  const username = useSelector((state) => state.auth.username);
+  const submitVote = () => {
+    const voteTemplate = {
+      pollId: pollData.pollId,
+      username,
+      numVotes: parseInt(numVotes),
+    };
+    axios
+      .post(
+        "https://us-central1-aiot-fit-xlab.cloudfunctions.net/voteinsinglepoll",
+        {
+          id: pollData.pollId,
+          votes: parseInt(numVotes),
+        }
+      )
+      .then((res) => {
+        voteTemplate.vote = getOptions().find(
+          (option) => option.value == selected
+        ).label;
+        socket.emit("vote", voteTemplate);
+        const temp = {
+          ...pollData,
+          totalVotes: !pollData.totalVotes
+            ? 0
+            : pollData.totalVotes + voteTemplate.numVotes,
+          votes: { ...pollData.votes },
+        };
+        temp.votes[voteTemplate.vote] = !temp.votes[voteTemplate.vote]
+          ? parseInt(numVotes)
+          : temp.votes[voteTemplate.vote] + parseInt(numVotes);
+        console.log(temp);
+        setPollData(temp);
+      });
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -25,13 +71,25 @@ export default function Poll({ data }) {
           <FontAwesome name="question-circle" size={16} />
           <Text style={styles.question}>{question}</Text>
         </View>
+        {stockSelected && stockSelected.ticker && (
+          <StockPreview
+            ticker={stockSelected.ticker}
+            data={stockSelected.data}
+            price={stockSelected.price}
+            change={stockSelected.change}
+            range={stockSelected.range}
+            name={stockSelected.name}
+            style={{ padding: 10 }}
+          />
+        )}
+
         <View style={styles.results}>
-          {Object.keys(data.votes).length > 0 ? (
-            Object.keys(data.votes)
-              .sort((a, b) => data.votes[a] < data.votes[b])
+          {Object.keys(pollData.votes).length > 0 ? (
+            Object.keys(pollData.votes)
+              .sort((a, b) => pollData.votes[a] < pollData.votes[b])
               .map((key, ind) => {
-                const numVotes = data.votes[key];
-                const totalVotes = data.totalVotes;
+                const numVotes = pollData.votes[key];
+                const total = pollData.totalVotes;
                 return ind < 3 ? (
                   <>
                     <Text>
@@ -44,9 +102,9 @@ export default function Poll({ data }) {
                           borderTopLeftRadius: 5,
                           borderBottomLeftRadius: 5,
                           flex:
-                            totalVotes == 0
+                            total == 0
                               ? 0
-                              : Math.floor((numVotes / totalVotes) * 100),
+                              : Math.floor((numVotes / total) * 100),
                         }}
                       />
                       <View
@@ -55,11 +113,9 @@ export default function Poll({ data }) {
                           borderTopRightRadius: 5,
                           borderBottomRightRadius: 5,
                           flex:
-                            totalVotes == 0
+                            total == 0
                               ? 0
-                              : Math.floor(
-                                  ((totalVotes - numVotes) / totalVotes) * 100
-                                ),
+                              : Math.floor(((total - numVotes) / total) * 100),
                         }}
                       />
                     </View>
@@ -70,7 +126,7 @@ export default function Poll({ data }) {
             <Text style={styles.emptyPoll}>Be the first!</Text>
           )}
         </View>
-        <Text style={styles.total}>Total Votes: {data.totalVotes}</Text>
+        <Text style={styles.total}>Total Votes: {pollData.totalVotes}</Text>
         <Button title="Vote" onPress={() => setVisible(true)} />
       </View>
       <Modal
@@ -92,8 +148,25 @@ export default function Poll({ data }) {
                 setSelected(value);
               }}
             />
+            <Text>Number of Votes</Text>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                borderColor: "#ddd",
+                height: 32,
+              }}
+              value={numVotes}
+              onChangeText={(e) => setNumVotes(e)}
+            />
           </View>
-          <Button title="Submit Vote" onPress={() => setVisible(false)} />
+          <Button
+            title="Submit Vote"
+            onPress={() => {
+              submitVote();
+              setVisible(false);
+            }}
+          />
         </View>
       </Modal>
     </>
@@ -107,10 +180,10 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 0,
     borderRadius: 10,
-    height: "75%",
+    height: "84%",
+    // flex: 1,
   },
   modalContainer: {
-    // height: "60%",
     backgroundColor: "#fff",
     borderRadius: 25,
   },
@@ -127,7 +200,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   optionsContainer: {
-    marginHorizontal: 15,
+    marginHorizontal: 45,
   },
   header: {
     flexDirection: "row",
@@ -149,6 +222,7 @@ const styles = StyleSheet.create({
   },
   results: {
     flex: 1,
+    marginTop: 5,
   },
   emptyPoll: {
     textAlign: "center",

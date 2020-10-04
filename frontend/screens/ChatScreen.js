@@ -53,6 +53,7 @@ export default function ChatScreen({ navigation, route }) {
       socket.on("init", (data) => {
         setChatMessages(data.messages);
         setPolls(data.polls);
+        console.log(`init ${JSON.stringify(data.polls)}`);
       });
       socket.on("message", (msg) => {
         // Messages need type (poll, messsage, advice from bot)
@@ -60,6 +61,25 @@ export default function ChatScreen({ navigation, route }) {
       });
       socket.on("poll", (poll) => {
         setPolls([...polls, poll]);
+      });
+      socket.on("vote", (vote) => {
+        const pollsTemp = [...polls];
+        setPolls(
+          pollsTemp.map((poll) => {
+            if (poll.pollId === vote.pollId) {
+              const res = {
+                ...poll,
+                totalVotes: poll.totalVotes + vote.numVotes,
+                votes: { ...poll.votes },
+                voters: [...poll.voters, vote.username],
+              };
+              res.votes[vote.vote] = !res.votes[vote.vote]
+                ? vote.numVotes
+                : res.votes[vote.vote] + vote.numVotes;
+              return res;
+            } else return poll;
+          })
+        );
       });
     }
   }, [socket, chatMessages]);
@@ -89,7 +109,7 @@ export default function ChatScreen({ navigation, route }) {
       pollId: id,
       totalVotes: 0,
       voters: [],
-      votes: {},
+      votes: selected >= 0 ? { yes: 0, no: 0 } : {},
       type: selected >= 0,
       stock: getStockById(selectedItems),
       action:
@@ -103,6 +123,7 @@ export default function ChatScreen({ navigation, route }) {
   };
 
   const getStockById = (id) => {
+    if (id.length == 0) return null;
     return stocks.find((item) => item.id == id);
   };
 
@@ -110,7 +131,7 @@ export default function ChatScreen({ navigation, route }) {
     <View style={styles.container}>
       <View
         style={{
-          height: polls.length == 0 ? "10%" : "40%",
+          height: polls.length == 0 ? "10%" : "50%",
         }}
       >
         <Text style={styles.pollsHeader}>Polls</Text>
@@ -118,7 +139,7 @@ export default function ChatScreen({ navigation, route }) {
           <>
             <Swiper>
               {polls.map((poll) => {
-                return <Poll key={poll.id} data={poll} />;
+                return <Poll key={poll.id} data={poll} socket={socket} />;
               })}
             </Swiper>
           </>
@@ -217,8 +238,8 @@ export default function ChatScreen({ navigation, route }) {
                       {buySell
                         .find((prop) => prop.value == selected)
                         .label.toLocaleLowerCase()}{" "}
-                      the {getStockById(selectedItems).name} (
-                      {getStockById(selectedItems).ticker}) stock?
+                      the {getStockById(selectedItems)?.name} (
+                      {getStockById(selectedItems)?.ticker}) stock?
                     </Text>
                   </View>
                 )}
@@ -251,8 +272,12 @@ export default function ChatScreen({ navigation, route }) {
                           .find((prop) => prop.value == selected)
                           .label.toLocaleLowerCase()
                       : "buy",
-                  name: getStockById(selectedItems).name,
-                  topic: getStockById(selectedItems).ticker,
+                  name: getStockById(selectedItems)
+                    ? getStockById(selectedItems).name
+                    : "",
+                  topic: getStockById(selectedItems)
+                    ? getStockById(selectedItems).ticker
+                    : "",
                 };
                 console.log(pollData);
                 axios

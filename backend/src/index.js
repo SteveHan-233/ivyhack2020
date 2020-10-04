@@ -28,7 +28,7 @@ mongoose.connection.on("error", (err) => {
 });
 
 const messages = [];
-const polls = [];
+let polls = [];
 io.on("connection", (socket) => {
   console.log("a user connected :D");
   io.emit("init", { messages, polls });
@@ -44,6 +44,25 @@ io.on("connection", (socket) => {
     console.log(polls);
     io.emit("poll", poll);
   });
+  socket.on("vote", (vote) => {
+    console.log(`vote received: ${JSON.stringify(vote)}`);
+    polls = polls.map((poll) => {
+      if (poll.pollId === vote.pollId) {
+        const res = {
+          ...poll,
+          totalVotes: poll.totalVotes + vote.numVotes,
+          votes: { ...poll.votes },
+          voters: [...poll.voters, vote.username],
+        };
+        res.votes[vote.vote] = !res.votes[vote.vote]
+          ? vote.numVotes
+          : res.votes[vote.vote] + vote.numVotes;
+        console.log(res);
+        return res;
+      } else return poll;
+    });
+  });
+
   socket.on("disconnect", () => {
     console.log("a user disconnected :(");
   });

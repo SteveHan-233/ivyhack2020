@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { View, Dimensions } from 'react-native';
-import { Text } from 'react-native-elements';
-import Container from '../components/Container';
-import { SlideAreaChart } from 'react-native-slide-charts';
-import { useSelector } from 'react-redux';
-import StockPreview from '../components/StockPreview';
-import BlurredStatusBar from '../components/BlurredStatusBar';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
-import StockDetail from '../components/StockDetail';
+import React, { useState } from "react";
+import { View, Dimensions } from "react-native";
+import { Text } from "react-native-elements";
+import Container from "../components/Container";
+import { SlideAreaChart } from "react-native-slide-charts";
+import { useSelector } from "react-redux";
+import StockPreview from "../components/StockPreview";
+import BlurredStatusBar from "../components/BlurredStatusBar";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
+import BottomSheet from "reanimated-bottom-sheet";
+import StockDetail from "../components/StockDetail";
 
 const Stock = () => {
   const stocks = useSelector((state) => state.stock);
@@ -36,7 +36,7 @@ const Stock = () => {
       <BlurredStatusBar
         children={
           <Container>
-            <Text h1 h1Style={{ fontWeight: '800', marginBottom: 20 }}>
+            <Text h1 h1Style={{ fontWeight: "800", marginBottom: 20 }}>
               Stocks
             </Text>
 
