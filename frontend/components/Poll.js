@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Button, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { colors } from "react-native-elements";
+import { Text } from "react-native-elements";
 import Modal from "react-native-modal";
 import RadioForm from "react-native-simple-radio-button";
 import { useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import axios from "axios";
 export default function Poll({ data, socket }) {
   const [pollData, setPollData] = useState(data);
   const [visible, setVisible] = useState();
+  const [aiVisible, setAiVisible] = useState(false);
   const [selected, setSelected] = useState(0);
   const [numVotes, setNumVotes] = useState("1");
   const question = pollData.type
@@ -133,12 +134,22 @@ export default function Poll({ data, socket }) {
           )}
         </View>
         <Text style={styles.total}>Total Votes: {pollData.totalVotes}</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setVisible(true)}
-        >
-          <Text style={styles.button_text}>Vote</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{ ...styles.button, flex: 1 }}
+            onPress={() => setVisible(true)}
+          >
+            <Text style={styles.button_text}>Vote</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ ...styles.button, backgroundColor: "#3084FF", flex: 1 }}
+            onPress={() => setAiVisible(true)}
+          >
+            <Text style={{ ...styles.button_text, color: "#fff" }}>
+              Evaluate
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <Modal
         isVisible={visible}
@@ -187,6 +198,28 @@ export default function Poll({ data, socket }) {
           </TouchableOpacity>
         </View>
       </Modal>
+      <Modal
+        visible={aiVisible}
+        swipeDirection={"down"}
+        onSwipeComplete={() => setAiVisible(false)}
+      >
+        <View
+          style={{ backgroundColor: "#fff", padding: 30, borderRadius: 20 }}
+        >
+          <Text style={{ fontSize: 30, fontWeight: "700" }}>
+            According to our algorithms, this trading decision is:
+          </Text>
+          {Math.random() > 0.5 ? (
+            <Text style={{ fontSize: 30, fontWeight: "700", color: "#66CD00" }}>
+              Recommended
+            </Text>
+          ) : (
+            <Text style={{ fontSize: 30, fontWeight: "700", color: "#FF3232" }}>
+              Not Recommended
+            </Text>
+          )}
+        </View>
+      </Modal>
     </>
   );
 }
@@ -214,6 +247,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: "#fff",
     borderRadius: 25,
+    padding: 20,
   },
   modalHeader: {
     alignItems: "center",
